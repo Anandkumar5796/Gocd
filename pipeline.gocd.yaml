@@ -1,0 +1,29 @@
+format_version: 4
+pipelines:
+  git-version-check:
+    group: utilities
+    label_template: "${git[:7]}"
+    lock_behavior: none
+    materials:
+      git:
+        git: https://github.com/example/dummy-repo.git
+        branch: main
+    stages:
+      - check-git-version:
+          fetch_materials: true
+          clean_workspace: true
+          approval:
+            type: success
+          jobs:
+            check-git:
+              elastic_profile_id: default
+              tasks:
+                - exec:
+                    command: git
+                    arguments:
+                      - --version
+                - exec:
+                    command: sh
+                    arguments:
+                      - -c
+                      - echo "Git version checked successfully"
